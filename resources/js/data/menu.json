@@ -1,0 +1,126 @@
+{
+  "data": [
+    {
+      "title": "Dashboard",
+      "icon": "home",
+      "type": "sub",
+      "badgeType": "primary",
+      "badgeValue": "6",
+      "active": false,
+      "children": [
+        {
+          "path": "/dashboard/default",
+          "title": "Default",
+          "type": "link"
+        },
+        {
+          "path": "/dashboard/ecommerce",
+          "title": "E-Commerce",
+          "type": "link"
+        },
+        {
+          "path": "/dashboard/university",
+          "title": "University",
+          "type": "link"
+        },
+        {
+          "path": "/dashboard/bitcoin",
+          "title": "Crypto",
+          "type": "link"
+        },
+        {
+          "path": "/dashboard/server",
+          "title": "Server",
+          "type": "link"
+        },
+        {
+          "path": "/dashboard/project",
+          "title": "Project",
+          "type": "link"
+        }
+      ]
+    },
+    {
+      "title": "Employers",
+      "icon": "airplay",
+      "type": "sub",
+      "active": false,
+      "children": [
+        {
+          "path": "/employer/profile/add",
+          "title": "Add Employer Profile",
+          "type": "link"
+        },
+        {
+          "path": "/employer/account/add",
+          "title": "Add Employer Account",
+          "type": "link"
+        },
+        {
+          "path": "/employer/profiles",
+          "title": "View All Profiles",
+          "type": "link"
+        },
+        {
+          "path": "/employer/account",
+          "title": "View All Accounts",
+          "type": "link"
+        }
+      ]
+    },
+    {
+      "title": "Candidates",
+      "icon": "airplay",
+      "type": "sub",
+      "active": false,
+      "children": [
+        {
+          "path": "/candidate/add",
+          "title": "Add candidate",
+          "type": "link"
+        },
+        {
+          "path": "/candidates",
+          "title": "View All",
+          "type": "link"
+        }
+      ]
+    },
+    {
+      "title": "Roles",
+      "icon": "airplay",
+      "type": "sub",
+      "active": false,
+      "children": [
+        {
+          "path": "/roles/add",
+          "title": "Add Role",
+          "type": "link"
+        },
+        {
+          "path": "/roles",
+          "title": "View All",
+          "type": "link"
+        }
+      ]
+    },
+    {
+      "title": "Permissions",
+      "icon": "airplay",
+      "type": "sub",
+      "active": false,
+      "children": [
+        {
+          "path": "/permissions/add",
+          "title": "Add Permission",
+          "type": "link"
+        },
+        {
+          "path": "/permissions",
+          "title": "View All",
+          "type": "link"
+        }
+      ]
+    }
+  ]
+}
