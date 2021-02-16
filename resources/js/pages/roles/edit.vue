@@ -64,7 +64,7 @@
 
   export default {
     name: "EditRole",
-    middleware: 'auth',
+    middleware: ['auth','permission:update-role'],
     data() {
       return {
         form: new Form({

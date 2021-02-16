@@ -11,6 +11,8 @@ use App\Http\Controllers\Settings\PasswordController;
 use App\Http\Controllers\Settings\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ManagementController;
+use App\Http\Controllers\Api\CandidateController;
+use App\Http\Controllers\Api\EmployerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,6 +29,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('logout', [LoginController::class, 'logout']);
 
     Route::get('user', [UserController::class, 'current']);
+    Route::get('abilities', [UserController::class, 'abilities']);
 
     Route::patch('settings/profile', [ProfileController::class, 'update']);
     Route::patch('settings/password', [PasswordController::class, 'update']);
@@ -46,6 +49,40 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('permissions/add', [ManagementController::class, 'addPermission']);
     Route::put('permissions/{permission_id}', [ManagementController::class, 'updatePermission']);
     Route::delete('permissions/{permission_id}', [ManagementController::class, 'deletePermission']);
+
+
+    Route::get('industries', [CandidateController::class, 'getIndustries']);
+    Route::get('industries/all', [CandidateController::class, 'getAllIndustries']);
+    Route::post('industries', [CandidateController::class, 'addIndustry']);
+    Route::put('industries/{id}', [CandidateController::class, 'updateIndustry']);
+    Route::delete('industries/{id}', [CandidateController::class, 'deleteIndustry']);
+
+    Route::get('candidates', [CandidateController::class, 'getCandidates']);
+    Route::get('candidates/shortlisted', [CandidateController::class, 'getShortlistedCandidates']);
+    Route::put('candidates/{id}/shortlist', [CandidateController::class, 'shortlistCandidate']);
+    Route::post('candidates', [CandidateController::class, 'addCandidate']);
+    Route::get('candidates/{id}', [CandidateController::class, 'getCandidate']);
+//    Route::put('candidates/{id}', [CandidateController::class, 'updateCandidate']);
+
+    Route::delete('uploads/{upload_id}', [CandidateController::class, 'deleteUpload']);
+
+    Route::get('employers/profiles', [EmployerController::class, 'getProfiles']);
+    Route::get('employers/profiles/all', [EmployerController::class, 'getAllProfiles']);
+    Route::post('employers/profiles', [EmployerController::class, 'addProfile']);
+    Route::get('employers/profiles/{id}', [EmployerController::class, 'getProfile']);
+    Route::put('employers/profiles/{id}', [EmployerController::class, 'updateProfile']);
+    Route::delete('employers/profiles/{id}', [EmployerController::class, 'deleteProfile']);
+
+    Route::put('employers/profiles/{id}/candidates', [EmployerController::class, 'syncCandidates']);
+
+
+
+    Route::get('employers/accounts', [EmployerController::class, 'getAccounts']);
+    Route::post('employers/accounts', [EmployerController::class, 'addAccount']);
+    Route::delete('employers/accounts/{id}', [EmployerController::class, 'deleteAccount']);
+    Route::get('employers/accounts/{id}', [EmployerController::class, 'getAccount']);
+    Route::put('employers/accounts/{id}', [EmployerController::class, 'updateAccount']);
+    Route::put('employers/accounts/{id}/change-password', [EmployerController::class, 'changeAccountPassword']);
 
 });
 

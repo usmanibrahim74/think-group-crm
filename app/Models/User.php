@@ -115,4 +115,11 @@ class User extends Authenticatable implements JWTSubject //, MustVerifyEmail
     {
         return [];
     }
+
+    public function profile(){
+
+        return $this->belongsTo(Employer::class,'employer_id');
+
+    }
+
 }

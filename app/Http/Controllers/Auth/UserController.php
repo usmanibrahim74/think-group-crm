@@ -16,7 +16,22 @@ class UserController extends Controller
     public function current(Request $request)
     {
         $user = $request->user();
-        $user->permissions = $user->allPermissions();
+        $user->permissions = $user->allPermissions()->pluck('name');
+        $user->load('profile');
         return response()->json($user);
+    }
+
+
+    /**
+     * Get authenticated user abilites.
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function abilities(Request $request)
+    {
+        $user = $request->user();
+        $data = $user->allPermissions()->pluck('name');
+        return response()->json($data);
     }
 }

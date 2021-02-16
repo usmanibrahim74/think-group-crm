@@ -99,6 +99,9 @@ export default {
     },
     async logout () {
       // Log out the user.
+      this.$ability.update([
+        { subject: 'all', action: [] }
+      ])
       await this.$store.dispatch('auth/logout')
 
       // Redirect to login.

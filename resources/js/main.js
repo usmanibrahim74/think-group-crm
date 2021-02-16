@@ -18,6 +18,9 @@ import * as VueGoogleMaps from 'vue2-google-maps'
 import { VueMasonryPlugin } from 'vue-masonry'
 import VueFeather from 'vue-feather';
 import toastr from "./mixins/toastr";
+import objectToFormData from "./mixins/objectToFormData";
+import { abilitiesPlugin } from '@casl/vue';
+import ability from './services/ability';
 
 import { Icon } from "leaflet";
 delete Icon.Default.prototype._getIconUrl;
@@ -59,6 +62,8 @@ Vue.use(require('vue-moment'));
 Vue.component('Breadcrumbs', Breadcrumbs)
 Vue.use(VueMasonryPlugin);
 Vue.mixin(toastr);
+Vue.mixin(objectToFormData);
+Vue.use(abilitiesPlugin, ability);
 
 import '~/plugins'
 import '~/components'

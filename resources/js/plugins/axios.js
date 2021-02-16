@@ -23,6 +23,9 @@ axios.interceptors.request.use(request => {
 
 // Response interceptor
 axios.interceptors.response.use(response => response, error => {
+  if(!error.response){
+    return Promise.reject(error);
+  }
   const { status } = error.response
 
   if (status >= 500) {
@@ -48,6 +51,19 @@ axios.interceptors.response.use(response => response, error => {
       store.commit('auth/LOGOUT')
 
       router.push({ name: 'login' })
+    })
+  }
+
+  if (status === 403) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Access Denied',
+      text: 'You don\'t have permission to access this page',
+      reverseButtons: true,
+      confirmButtonText: i18n.t('ok'),
+      cancelButtonText: i18n.t('cancel')
+    }).then(() => {
+      router.push({ name: 'dashboard' })
     })
   }
 

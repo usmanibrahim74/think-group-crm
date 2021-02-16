@@ -43,13 +43,13 @@
                   @filtered="onFiltered"
                 >
                   <template #cell(actions)="data" class="text-center">
-                    <router-link title="Edit" :to="{ name: 'roles.edit', params: { id : data.item.id }}" class="text-muted">
+                    <router-link title="Edit" v-if="$can('update-role')" :to="{ name: 'roles.edit', params: { id : data.item.id }}" class="text-muted">
                       <i class="fa fa-edit"></i>
                     </router-link>
-                    <router-link title="Manage Permissions" :to="{ name: 'roles.permissions', params: { id : data.item.id }}" class="text-muted">
+                    <router-link title="Manage Permissions" v-if="$can('manage-role-permissions')" :to="{ name: 'roles.permissions', params: { id : data.item.id }}" class="text-muted">
                       <i class="fa fa-tasks"></i>
                     </router-link>
-                    <a href="#" title="Delete" v-b-modal.modal-delete-role @click.prevent="delete_id=data.item.id" class="text-muted">
+                    <a href="#" title="Delete"  v-if="$can('delete-role')" v-b-modal.modal-delete-role @click.prevent="delete_id=data.item.id" class="text-muted">
                       <i class="fa fa-trash"></i>
                     </a>
                   </template>
@@ -89,7 +89,7 @@
 
   export default {
     name: "ViewRoles",
-    middleware: 'auth',
+    middleware: ['auth','permission:view-role'],
     data() {
       return {
         rolesTableFields: [

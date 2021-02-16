@@ -48,6 +48,8 @@ function createRouter () {
  * @param {Function} next
  */
 async function beforeEach (to, from, next) {
+
+
   let components = []
 
   try {

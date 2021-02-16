@@ -1,6 +1,6 @@
 import * as types from '../mutations/management'
 import axios from "axios";
-import Form from "vform";
+
 // state
 export const state = {
   roles: {

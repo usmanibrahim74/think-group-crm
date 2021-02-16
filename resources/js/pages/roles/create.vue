@@ -62,7 +62,7 @@
 
   export default {
     name: "CreateRole",
-    middleware: 'auth',
+    middleware: ['auth','permission:add-role'],
     data() {
       return {
         form: new Form({

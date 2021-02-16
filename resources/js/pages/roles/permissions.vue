@@ -87,7 +87,7 @@
 
   export default {
     name: "ViewPermissions",
-    middleware: 'auth',
+    middleware: ['auth','permission:manage-role-permissions'],
     data() {
       return {
         permissionsTableFields: [

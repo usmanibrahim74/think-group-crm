@@ -7,6 +7,7 @@
       "badgeType": "primary",
       "badgeValue": "6",
       "active": false,
+      "gate": "access-dashboard",
       "children": [
         {
           "path": "/dashboard/default",
@@ -45,26 +46,31 @@
       "icon": "airplay",
       "type": "sub",
       "active": false,
+      "gate": "access-employer",
       "children": [
         {
-          "path": "/employer/profile/add",
+          "path": "/employers/profiles/add",
           "title": "Add Employer Profile",
-          "type": "link"
+          "type": "link",
+          "gate": "add-employer-profile"
         },
         {
-          "path": "/employer/account/add",
+          "path": "/employers/accounts/add",
           "title": "Add Employer Account",
-          "type": "link"
+          "type": "link",
+          "gate": "add-employer-account"
         },
         {
-          "path": "/employer/profiles",
+          "path": "/employers/profiles",
           "title": "View All Profiles",
-          "type": "link"
+          "type": "link",
+          "gate": "view-employer-profile"
         },
         {
-          "path": "/employer/account",
+          "path": "/employers/accounts",
           "title": "View All Accounts",
-          "type": "link"
+          "type": "link",
+          "gate": "view-employer-account"
         }
       ]
     },
@@ -73,34 +79,54 @@
       "icon": "airplay",
       "type": "sub",
       "active": false,
+      "gate": "access-candidate",
       "children": [
         {
-          "path": "/candidate/add",
+          "path": "/candidates/add",
           "title": "Add candidate",
-          "type": "link"
+          "type": "link",
+          "gate": "add-candidate"
+        },
+        {
+          "path": "/candidates/shortlisted",
+          "title": "View Shortlisted",
+          "type": "link",
+          "gate": "view-shortlisted-candidate"
         },
         {
           "path": "/candidates",
           "title": "View All",
-          "type": "link"
+          "type": "link",
+          "gate": "view-candidate"
         }
       ]
+    },
+    {
+      "path": "/industries",
+      "title": "Industries",
+      "icon": "calendar",
+      "type": "link",
+      "gate": "access-industry",
+      "bookmark": true
     },
     {
       "title": "Roles",
       "icon": "airplay",
       "type": "sub",
       "active": false,
+      "gate": "access-role",
       "children": [
         {
           "path": "/roles/add",
           "title": "Add Role",
-          "type": "link"
+          "type": "link",
+          "gate": "add-role"
         },
         {
           "path": "/roles",
           "title": "View All",
-          "type": "link"
+          "type": "link",
+          "gate": "view-role"
         }
       ]
     },
@@ -109,16 +135,19 @@
       "icon": "airplay",
       "type": "sub",
       "active": false,
+      "gate": "access-permission",
       "children": [
         {
           "path": "/permissions/add",
           "title": "Add Permission",
-          "type": "link"
+          "type": "link",
+          "gate": "add-permission"
         },
         {
           "path": "/permissions",
           "title": "View All",
-          "type": "link"
+          "type": "link",
+          "gate": "view-permission"
         }
       ]
     }

@@ -63,7 +63,7 @@
 
   export default {
     name: "EditPermission",
-    middleware: 'auth',
+    middleware: ['auth','permission:update-permission'],
     data() {
       return {
         form: new Form({

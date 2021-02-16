@@ -23,7 +23,7 @@
 <script>
     export default {
         name: "dashboard",
-        middleware: 'auth',
+        middleware: ['auth','permission:access-dashboard'],
     }
 </script>
 

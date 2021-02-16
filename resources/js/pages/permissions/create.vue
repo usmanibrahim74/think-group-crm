@@ -62,7 +62,7 @@
 
   export default {
     name: "CreatePermission",
-    middleware: 'auth',
+    middleware: ['auth','permission:add-permission'],
     data() {
       return {
         form: new Form({

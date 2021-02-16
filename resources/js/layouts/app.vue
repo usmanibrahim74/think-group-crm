@@ -22,6 +22,7 @@
   import Sidebar from '~/components/sidebar'
   import Footer from '~/components/footer'
   import Child from '~/components/Child'
+  import axios from "axios";
 
     export default {
       name: "AppLayout",
@@ -46,15 +47,24 @@
           layout: state => state.layout.layout
         })
       },
+      beforeCreate(){
+        axios.get('/api/abilities').then(response =>{
+          this.$ability.update([
+            { subject: 'all', action: response.data }
+          ])
+        })
+      },
       created(){
         window.addEventListener('resize', this.handleResize)
         this.handleResize();
         this.resized = this.sidebar_toggle_var;
-        this.$store.dispatch('layout/set')
+        this.$store.dispatch('layout/set');
+
       },
       watch:{
         '$route':{
           handler(){
+            this.updateAbilities()
             this.menuItems && this.menuItems.filter(items => {
               if (items.path === this.$route.path)
                 this.$store.dispatch('menu/setActiveRoute', items)
@@ -77,6 +87,14 @@
         }
       },
       methods:{
+        async updateAbilities(){
+          axios.get('/api/abilities').then(response =>{
+            this.$ability.update([
+              { subject: 'all', action: response.data }
+            ])
+          })
+        },
+
         sidebar_toggle(value) {
           this.sidebar_toggle_var = !value
         },
@@ -90,7 +108,8 @@
           this.width = window.innerWidth;
           this.height = window.innerHeight;
         }
-      }
+      },
+
 
     }
 </script>

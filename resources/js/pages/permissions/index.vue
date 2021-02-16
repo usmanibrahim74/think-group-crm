@@ -42,10 +42,10 @@
                   :fields="permissionsTableFields"
                 >
                   <template #cell(actions)="data" class="text-center">
-                    <router-link title="Edit" :to="{ name: 'permissions.edit', params: { id : data.item.id }}" class="text-muted">
+                    <router-link title="Edit" v-if="$can('update-permission')" :to="{ name: 'permissions.edit', params: { id : data.item.id }}" class="text-muted">
                       <i class="fa fa-edit"></i>
                     </router-link>
-                    <a href="#" title="Delete" v-b-modal.modal-delete-permission @click.prevent="delete_id=data.item.id" class="text-muted">
+                    <a href="#" title="Delete" v-if="$can('delete-permission')" v-b-modal.modal-delete-permission @click.prevent="delete_id=data.item.id" class="text-muted">
                       <i class="fa fa-trash"></i>
                     </a>
                   </template>
@@ -85,7 +85,7 @@
 
   export default {
     name: "ViewPermissions",
-    middleware: 'auth',
+    middleware: ['auth','permission:view-permission'],
     data() {
       return {
         permissionsTableFields: [
