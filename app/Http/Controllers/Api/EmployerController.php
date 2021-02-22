@@ -35,7 +35,7 @@ class EmployerController extends Controller
         });
         $totalCount = $query->count();
 
-        $data = $query->take($perPage)->skip(($page-1)*$perPage)->get()  ;
+        $data = $query->take($perPage)->skip(($page-1)*$perPage)->get();
 
 
         $toReturn = generatePagination($page,$perPage,$totalCount, $data);

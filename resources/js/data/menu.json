@@ -1,45 +1,12 @@
 {
   "data": [
     {
-      "title": "Dashboard",
+      "path": "/",
+      "title": "Industries",
       "icon": "home",
-      "type": "sub",
-      "badgeType": "primary",
-      "badgeValue": "6",
-      "active": false,
+      "type": "link",
       "gate": "access-dashboard",
-      "children": [
-        {
-          "path": "/dashboard/default",
-          "title": "Default",
-          "type": "link"
-        },
-        {
-          "path": "/dashboard/ecommerce",
-          "title": "E-Commerce",
-          "type": "link"
-        },
-        {
-          "path": "/dashboard/university",
-          "title": "University",
-          "type": "link"
-        },
-        {
-          "path": "/dashboard/bitcoin",
-          "title": "Crypto",
-          "type": "link"
-        },
-        {
-          "path": "/dashboard/server",
-          "title": "Server",
-          "type": "link"
-        },
-        {
-          "path": "/dashboard/project",
-          "title": "Project",
-          "type": "link"
-        }
-      ]
+      "bookmark": true
     },
     {
       "title": "Employers",

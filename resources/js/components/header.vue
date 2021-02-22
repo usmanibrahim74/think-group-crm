@@ -51,8 +51,13 @@
               <div class="dotted-animation"><span class="animate-circle"></span><span class="main-circle"></span></div>
             </div>
             <ul class="profile-dropdown onhover-show-div p-20">
-              <li><a href="#"><feather type="user"></feather> Edit Profile</a></li>
-              <li><a href="#"><feather type="settings"></feather> Settings</a></li>
+<!--              <li><a href="#"><feather type="user"></feather> Edit Profile</a></li>-->
+              <li>
+                <router-link :to="{ name: 'settings'}" >
+                  <feather type="settings"></feather> Settings
+                </router-link>
+              </li>
+<!--              <li><a href="#"><feather type="settings"></feather> Settings</a></li>-->
               <li @click="logout" ><a href="#"><feather type="log-out"></feather> Logout</a></li>
             </ul>
           </li>
