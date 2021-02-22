@@ -1,16 +1,25 @@
 <template>
   <div>
-    <Breadcrumbs title="Sample Page"/>
+    <Breadcrumbs title="Dashboard"/>
     <!-- Container-fluid starts-->
     <div class="container-fluid">
       <div class="row">
-        <div class="col-md-12">
-          <div class="card">
-            <div class="card-header">
-              <h5>Sample Card</h5><span>lorem ipsum dolor sit amet, consectetur adipisicing elit</span>
-            </div>
-            <div class="card-body">
-              <p>"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."</p>
+        <div class="col-sm-6 col-xl-6 col-lg-6" v-for="(widget,i) in widgets">
+          <div class="card o-hidden">
+            <div class="bg-primary b-r-4 card-body">
+              <div class="media static-top-widget">
+                <div class="align-self-center text-center">
+                  <feather :type="widget.logo" class="middle"></feather>
+                </div>
+                <div class="media-body"><span class="m-0">
+                  {{ widget.name }}
+                </span>
+                  <h4 class="mb-0 counter">
+                    {{ widget.value }}
+                  </h4>
+                  <feather :type="widget.logo" class="icon-bg"></feather>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -21,9 +30,25 @@
 </template>
 
 <script>
+
+    import axios from 'axios';
     export default {
         name: "dashboard",
         middleware: ['auth','permission:access-dashboard'],
+        data(){
+          return {
+            widgets : []
+          }
+        },
+        created(){
+          this.fetchDashboardWidgets();
+        },
+        methods:{
+          async fetchDashboardWidgets(){
+            const { data } = await axios.get('/api/dashboard');
+            this.widgets = data;
+          }
+        }
     }
 </script>
 

@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ManagementController;
 use App\Http\Controllers\Api\CandidateController;
 use App\Http\Controllers\Api\EmployerController;
+use App\Http\Controllers\Api\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,6 +34,8 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::patch('settings/profile', [ProfileController::class, 'update']);
     Route::patch('settings/password', [PasswordController::class, 'update']);
+
+    Route::get('/dashboard', [DashboardController::class,'get']);
 
     /* users routes */
     Route::get('users', [ManagementController::class, 'getUsers']);

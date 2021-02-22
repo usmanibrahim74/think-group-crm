@@ -3,7 +3,8 @@
     <div class="main-header-left d-none d-lg-block">
       <div class="logo-wrapper">
         <router-link to="/">
-          <img src="../assets/images/endless-logo.png" alt />
+          <img v-if="user && user.profile" class="w-100" :src="'/storage/'+user.profile.logo" alt />
+          <img v-else src="../assets/images/logo.png" alt />
         </router-link>
       </div>
     </div>
@@ -231,7 +232,8 @@ export default {
     ...mapState({
       menuItems: state => state.menu.data,
       layout: state => state.layout.layout,
-      sidebar: state => state.layout.sidebarType
+      sidebar: state => state.layout.sidebarType,
+      user: state => state.auth.user
     })
   },
   created() {

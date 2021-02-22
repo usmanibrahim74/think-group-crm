@@ -42,7 +42,7 @@ class Candidate extends Model
     }
 
     public function employers(){
-        return $this->belongsToMany(Employer::class);
+        return $this->belongsToMany(Employer::class,'candidate_employer');
     }
 
     public function shortlistedBy(){
