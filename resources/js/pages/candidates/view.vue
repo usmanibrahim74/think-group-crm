@@ -301,7 +301,7 @@
     methods:{
 
       async toggleShortlist(){
-        const attach = !this.candidate.shortlisted_by.find(t => t.id == this.user.profile.id);
+        const attach = !this.candidate.shortlisted_by.find(t => t.id == this.user.id);
         try {
           if(!attach){
             const form = new Form({
