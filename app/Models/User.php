@@ -122,4 +122,13 @@ class User extends Authenticatable implements JWTSubject //, MustVerifyEmail
 
     }
 
+    public function shortlistedCandidates(){
+        return $this->belongsToMany(Candidate::class,'shortlisted_candidates')->withPivot('comment_via');
+
+    }
+
+    public function shortlist(){
+        return $this->hasMany(ShortlistedCandidate::class);
+    }
+
 }

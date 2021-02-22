@@ -94,8 +94,14 @@
           "gate": "view-shortlisted-candidate"
         },
         {
-          "path": "/candidates",
-          "title": "View All",
+          "path": "/candidates?department=healthcare",
+          "title": "View Healthcare Candidates",
+          "type": "link",
+          "gate": "view-candidate"
+        },
+        {
+          "path": "/candidates?department=education",
+          "title": "View Education Candidates",
           "type": "link",
           "gate": "view-candidate"
         }
@@ -148,6 +154,27 @@
           "title": "View All",
           "type": "link",
           "gate": "view-permission"
+        }
+      ]
+    },
+    {
+      "title": "Users",
+      "icon": "airplay",
+      "type": "sub",
+      "active": false,
+      "gate": "access-user",
+      "children": [
+        {
+          "path": "/users/add",
+          "title": "Add User",
+          "type": "link",
+          "gate": "add-user"
+        },
+        {
+          "path": "/users",
+          "title": "View All",
+          "type": "link",
+          "gate": "view-user"
         }
       ]
     }

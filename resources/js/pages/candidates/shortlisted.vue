@@ -86,7 +86,7 @@
           'actions'
         ],
 
-        filter: "",
+        filter:"",
         pageOptions: [5, 10, 15],
         delete_id:0,
         timeout:0,
@@ -99,6 +99,7 @@
     computed: {
       ...mapState({
         candidates: state => state.candidates.shortlisted,
+
       }),
     },
     methods:{

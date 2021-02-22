@@ -15,6 +15,12 @@ export const state = {
     count:0,
     data:[]
   },
+  shortlistedBy: {
+    page:1,
+    perPage:5,
+    count:0,
+    data:[]
+  },
   candidate:null,
   industries: {
     page:1,
@@ -35,6 +41,9 @@ export const getters = {
 export const mutations = {
   [types.FETCH_SHORTLISTED_CANDIDATES_SUCCESS] (state, { candidates }) {
     state.shortlisted = candidates
+  },
+  [types.FETCH_SHORTLISTED_BY_SUCCESS] (state, { employers }) {
+    state.shortlistedBy = employers
   },
   [types.FETCH_CANDIDATES_SUCCESS] (state, { candidates }) {
     state.candidates = candidates
@@ -69,14 +78,32 @@ export const actions = {
       console.log(e)
     }
   },
+  async fetchShortlistedBy ({ commit, state }, payload) {
+    try {
+      let
+        page = state.shortlistedBy.page,
+        perPage = state.shortlistedBy.perPage,
+        search = payload?payload.search?payload.search:"":"",
+        id =  payload.id;
+      const url = '/api/candidates/'+id+'/shortlistedby?'+'search='+search+'&perPage='+perPage+'&page='+page
+      const { data } = await axios.get(url)
+
+      commit(types.FETCH_SHORTLISTED_BY_SUCCESS, { employers: data })
+    } catch (e) {
+
+      console.log(e)
+    }
+  },
 
   async fetchCandidates ({ commit, state }, payload) {
     try {
+      state.candidates.data = [];
       let
         page = state.candidates.page,
         perPage = state.candidates.perPage,
         search = payload?payload.search?payload.search:"":"";
-      const url = '/api/candidates?'+'search='+search+'&perPage='+perPage+'&page='+page
+      let department = payload.department?payload.department:'';
+      const url = '/api/candidates?'+'search='+search+'&perPage='+perPage+'&page='+page+"&department="+department
       const { data } = await axios.get(url)
 
       commit(types.FETCH_CANDIDATES_SUCCESS, { candidates: data })

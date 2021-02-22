@@ -43,13 +43,20 @@ export default [
 
   { path: '/employers/profiles', name: 'employers.profiles', component: page('employers/profiles/index.vue') },
   { path: '/employers/profiles/add', name: 'employers.profiles.add', component: page('employers/profiles/create.vue') },
-  { path: '/employers/profiles/:id', name: 'employers.profiles.edit', component: page('employers/profiles/edit.vue') },
+  { path: '/employers/profiles/:id', name: 'employers.profiles.view', component: page('employers/profiles/view.vue') },
+  { path: '/employers/profiles/:id/edit', name: 'employers.profiles.edit', component: page('employers/profiles/edit.vue') },
   { path: '/employers/profiles/:id/candidates', name: 'employers.profiles.candidates', component: page('employers/profiles/candidates.vue') },
 
 
   { path: '/employers/accounts', name: 'employers.accounts', component: page('employers/accounts/index.vue') },
   { path: '/employers/accounts/add', name: 'employers.accounts.add', component: page('employers/accounts/create.vue') },
   { path: '/employers/accounts/:id', name: 'employers.accounts.edit', component: page('employers/accounts/edit.vue') },
+
+  { path: '/users', name: 'users', component: page('users/index.vue') },
+  { path: '/users/add', name: 'users.add', component: page('users/create.vue') },
+  { path: '/users/:id', name: 'users.edit', component: page('users/edit.vue') },
+
+
 
 
   { path: '*', component: page('errors/404.vue') }

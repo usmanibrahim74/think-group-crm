@@ -8,7 +8,7 @@
           <div class="card">
             <div class="card-header d-flex justify-content-between">
               <div class="card-title">
-                <h5>Candidates</h5><span>List of all Candidates</span>
+                <h5>{{ department }} Candidates</h5><span>List of all Candidates from {{ department.toLowerCase() }} department</span>
               </div>
               <div class="card-buttons">
 
@@ -16,9 +16,9 @@
             </div>
             <div class="card-body">
               <b-row>
-                <b-col md="6">
+                <b-col md="3">
 
-                  <b-input-group class="datatable-btn">
+                  <b-input-group class="">
                     <b-form-input v-model="filter" placeholder="Type to Search"></b-form-input>
                     <b-input-group-append>
                       <b-button :disabled="!filter" @click="filter = ''">Clear</b-button>
@@ -27,7 +27,17 @@
 
                 </b-col>
 
-                <b-col md="6">
+                <b-col md="3" offset="1">
+                  <b-input-group class="">
+                    <select class="form-control" v-model="radius">
+                      <option :value="rad" v-for="(rad,i) in radiusOptions" :key="i">{{ rad }} Miles</option>
+                    </select>
+                    <b-input-group-append>
+                      <b-button >Filter</b-button>
+                    </b-input-group-append>
+                  </b-input-group>
+                </b-col>
+                <b-col md="5">
                   <b-form-group label-cols="2" label="Per page" class="mb-0 datatable-select">
                     <b-form-select v-model="candidates.perPage" :options="pageOptions"></b-form-select>
                   </b-form-group>
@@ -108,6 +118,10 @@
         pageOptions: [5, 10, 15],
         delete_id:0,
         timeout:0,
+        radius:5,
+        radiusOptions: [5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
+
+        department:"",
       }
 
     },
@@ -139,10 +153,20 @@
 
       },
       fetchData(){
-        this.$store.dispatch('candidates/fetchCandidates', {search: this.filter});
+        let department = this.$route.query.department;
+        if(!department || department == ''){
+          department = "healthcare";
+        }
+        this.department = department.charAt(0).toUpperCase() + department.slice(1);
+        this.$store.dispatch('candidates/fetchCandidates', {search: this.filter, department});
       }
     },
     watch:{
+      $route:{
+        handler(){
+          this.fetchData();
+        }
+      },
       'filter':{
         handler(){
           this.filterData();

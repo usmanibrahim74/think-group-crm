@@ -23,6 +23,7 @@ class Candidate extends Model
         'current_salary',
         'desired_salary',
         'notes',
+        'department_id',
         'created_at',
         'updated_at',
     ];
@@ -45,11 +46,16 @@ class Candidate extends Model
     }
 
     public function shortlistedBy(){
-        return $this->belongsToMany(Employer::class,'shortlisted_candidates');
+        return $this->belongsToMany(User::class,'shortlisted_candidates');
     }
 
     public function getNameAttribute(){
         return $this->title.' '.$this->first_name.' '.$this->last_name;
     }
+
+    public function comments(){
+        return $this->morphMany(Comment::class, 'commentable')->whereNull('parent_id');
+    }
+
 
 }

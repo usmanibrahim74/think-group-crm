@@ -38,9 +38,6 @@ class Employer extends Model
 
     }
 
-    public function shortlistedCandidates(){
-        return $this->belongsToMany(User::class,'shortlisted_candidates');
 
-    }
 
 }

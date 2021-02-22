@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Candidate;
 use App\Models\Employer;
 use App\Models\Role;
 use App\Models\User;
@@ -11,6 +12,36 @@ use Illuminate\Support\Facades\Storage;
 
 class EmployerController extends Controller
 {
+    public function getShortlisted(Request $request, $id){
+
+        $perPage = $request->perPage?(int)$request->perPage:10;
+
+        $page = $request->page?(int)$request->page:1;
+        $search = $request->search?$request->search:"";
+        $toSearch = "%".$search."%";
+
+        $query = Candidate::where(function ($q)use($toSearch){
+            return $q->where('title', 'LIKE' ,$toSearch)
+                ->orWhere('title', 'LIKE' ,$toSearch)
+                ->orWhere('first_name', 'LIKE' ,$toSearch)
+                ->orWhere('last_name', 'LIKE' ,$toSearch)
+                ->orWhere('email', 'LIKE' ,$toSearch)
+                ->orWhere('city', 'LIKE' ,$toSearch)
+                ->orWhere('postcode', 'LIKE' ,$toSearch)
+                ->orWhere('contact', 'LIKE' ,$toSearch);
+        });
+        $query->whereHas('shortlistedBy',function ($q)use($id){
+            return $q->where('id',$id);
+        });
+        $totalCount = $query->count();
+
+        $data = $query->take($perPage)->skip(($page-1)*$perPage)->get()  ;
+
+
+        $toReturn = generatePagination($page,$perPage,$totalCount, $data);
+
+        return response()->json($toReturn);
+    }
     public function getAllProfiles(){
 
 
@@ -36,7 +67,7 @@ class EmployerController extends Controller
             ->orWhere('phone', 'LIKE' ,$toSearch);
         $totalCount = $query->count();
 
-        $data = $query->take($perPage)->skip(($page-1)*$perPage)->get()  ;
+        $data = $query->take($perPage)->skip(($page-1)*$perPage)->get();
 
 
         $toReturn = generatePagination($page,$perPage,$totalCount, $data);

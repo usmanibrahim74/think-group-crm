@@ -7,8 +7,8 @@ export default {
       if (this.isUndefined(obj)) {
         return fd
       } else if (this.isArray(obj)) {
-        obj.forEach( (value) => {
-          var key = pre + '[]';
+        obj.forEach( (value,i) => {
+          var key = pre + '['+i+']';
 
           this.objectToFormData(value, fd, key);
         });

@@ -12,35 +12,33 @@
             <div class="card-body">
               <b-form class="needs-validation" @submit.prevent="addPermission">
                 <div class="form-row">
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label class="col-form-label">Display Name</label>
-                      <input v-model="form.display_name" @keyup="generateSlug" class="form-control"
-                             :class="{ 'is-invalid': form.errors.has('display_name') }"
-                              type="text">
-                      <has-error :form="form" field="display_name"/>
+                  <div class="col">
+                    <div class="form-group row">
+                      <label class="col-form-label col-sm-3">Display Name:</label>
+                      <div class="col-sm-9">
+                        <input v-model="form.display_name" @keyup="generateSlug" class="form-control"
+                               :class="{ 'is-invalid': form.errors.has('display_name') }"
+                               type="text">
+                        <has-error :form="form" field="display_name"/>
+                      </div>
                     </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label class="col-form-label">Name</label>
-                      <input v-model="form.name" class="form-control" placeholder="must be unique, lowercase and no spaced"
-                             :class="{ 'is-invalid': form.errors.has('name') }"
-                              type="text">
-                      <has-error :form="form" field="name"/>
+                    <div class="form-group row">
+                      <label class="col-form-label col-sm-3">Name:</label>
+                      <div class="col-sm-9">
+                        <input v-model="form.name" class="form-control" placeholder="must be unique, lowercase and no spaced"
+                               :class="{ 'is-invalid': form.errors.has('name') }"
+                               type="text">
+                        <has-error :form="form" field="name"/>
+                      </div>
                     </div>
-                  </div>
-
-                  <div class="col-12">
-
-                    <div class="form-group">
-                      <label class="col-form-label">Description</label>
+                    <div class="form-group row">
+                      <label class="col-form-label col-sm-3">Description:</label>
+                      <div class="col-sm-9">
                       <textarea v-model="form.description" class="form-control"
-                                :class="{ 'is-invalid': form.errors.has('description') }"
-                                ></textarea>
-                      <has-error :form="form" field="description"/>
+                                :class="{ 'is-invalid': form.errors.has('description') }"></textarea>
+                        <has-error :form="form" field="description"/>
+                      </div>
                     </div>
-
                   </div>
                   <div class="col-12 text-right">
                     <v-button :loading="form.busy" >Add Permission</v-button>

@@ -12,41 +12,40 @@
             <div class="card-body">
               <b-form class="needs-validation" @submit.prevent="update">
                 <div class="form-row">
-                  <div class="col-md-12">
-                    <div class="form-group">
-                      <label>Select Employer</label>
-                      <multiselect :class="{ 'is-invalid': form.errors.has('profile') }"
-                                   v-model="form.profile" placeholder="Select Employer"
-                                   label="name" track-by="id" :options="profiles"></multiselect>
-                      <has-error :form="form" field="profile"/>
+                  <div class="col-12">
+                    <div class="form-group row">
+                      <label class="col-form-label col-sm-3">Select Employer:</label>
+                      <div class="col-sm-9">
+                        <multiselect :class="{ 'is-invalid': form.errors.has('profile') }"
+                                     v-model="form.profile" placeholder="Select Employer"
+                                     label="name" track-by="id" :options="profiles"></multiselect>
+                        <has-error :form="form" field="profile"/>
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label class="col-form-label col-sm-3">Name</label>
+                      <div class="col-sm-9">
+                        <input v-model="form.name" class="form-control"
+                               :class="{ 'is-invalid': form.errors.has('name') }"
+                               type="text">
+                        <has-error :form="form" field="name"/>
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label class="col-form-label col-sm-3">Email</label>
+                      <div class="col-sm-9">
+                        <input v-model="form.email" class="form-control"
+                               :class="{ 'is-invalid': form.errors.has('email') }"
+                               type="email">
+                        <has-error :form="form" field="email"/>
+                      </div>
                     </div>
                   </div>
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label class="col-form-label">Name</label>
-                      <input v-model="form.name" class="form-control"
-                             :class="{ 'is-invalid': form.errors.has('name') }"
-                             type="text">
-                      <has-error :form="form" field="name"/>
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label class="col-form-label">Email</label>
-                      <input v-model="form.email" class="form-control"
-                             :class="{ 'is-invalid': form.errors.has('email') }"
-                             type="email">
-                      <has-error :form="form" field="email"/>
-                    </div>
-                  </div>
-
-
-
 
                   <div class="col-12 text-right">
-                    <a href="#" v-b-modal.modal-change-account-password class="btn btn-info">
+                    <button type="button" v-b-modal.modal-change-account-password class="btn btn-info">
                       Change Password
-                    </a>
+                    </button>
                     <v-button :loading="form.busy" >Update Account</v-button>
                   </div>
                 </div>

@@ -4,8 +4,12 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Candidate;
+use App\Models\Comment;
+use App\Models\Employer;
 use App\Models\Industry;
+use App\Models\ShortlistedCandidate;
 use App\Models\Upload;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -32,6 +36,13 @@ class CandidateController extends Controller
                     ->orWhere('postcode', 'LIKE' ,$toSearch)
                     ->orWhere('contact', 'LIKE' ,$toSearch);
             });
+            if(isset($request->department) && $request->department != ""){
+                if($request->department == "healthcare"){
+                    $query = $query->where('department_id',1);
+                }else if($request->department == "education"){
+                    $query = $query->where('department_id',2);
+                }
+            }
             if($user->hasPermission('view-only-associated-candidate')){
                 $employer_id = $user->profile->id;
                 $query = $query->whereHas('employers',function ($q)use($employer_id){
@@ -79,9 +90,9 @@ class CandidateController extends Controller
             if($user->hasRole('admin')){
                 $query = $query->has('shortlistedBy');
             }else{
-                $employer_id = $user->profile->id;
+                $employer_id = $user->id;
                 $query = $query->whereHas('shortlistedBy',function ($q)use($employer_id){
-                    return $q->where('id',$employer_id);
+                    return $q->where('user_id',$employer_id);
                 });
             }
             $totalCount = $query->count();
@@ -101,11 +112,43 @@ class CandidateController extends Controller
 
     }
 
+    public function getShortlistedBy(Request $request, $id){
+
+        $perPage = $request->perPage?(int)$request->perPage:10;
+
+        $page = $request->page?(int)$request->page:1;
+        $search = $request->search?$request->search:"";
+        $toSearch = "%".$search."%";
+
+
+        $query = User::with(['shortlist'=>function($q)use($id){
+            return $q->where('candidate_id',$id);
+        }])->where(function ($q)use($toSearch){
+            return $q->where('name', 'LIKE' ,$toSearch)
+                ->orWhere('email', 'LIKE' ,$toSearch);
+
+        });
+        $query = $query->whereHas('shortlistedCandidates',function ($q)use($id){
+            return $q->where('candidate_id',$id);
+        });
+//        dd($query->toSql());
+        $totalCount = $query->count();
+
+        $data = $query->take($perPage)->skip(($page-1)*$perPage)->get();
+
+
+        $toReturn = generatePagination($page,$perPage,$totalCount, $data);
+
+        return response()->json($toReturn);
+
+    }
+
 
     public function addCandidate(Request $request){
 
         $messages = array(
             'contact.integer' => 'The contact field must be a valid number',
+            'department_id.required' => 'The department field is required',
         );
         $request->validate([
             'title' => 'required',
@@ -118,8 +161,10 @@ class CandidateController extends Controller
             'address_2' => 'required',
             'city' => 'required',
             'postcode' => 'required',
+            'department_id' => 'required',
             'industries' => 'required',
         ], $messages);
+
         $data = $request->except('industries','documents');
         $candidate = new Candidate();
         $candidate->fill($data)->save();
@@ -127,16 +172,21 @@ class CandidateController extends Controller
         $folder = str_replace('=','',$folder);
 
         if(gettype($request->documents) == "array"){
-
-            $documents = $request->file('documents');
+            $documents = $request->documents;
             foreach ($documents as $document){
-                $name = uniqid().'_'.$document->getClientOriginalName();
-                $path = "uploads/candidates/".$folder."/".$name;
-                Storage::disk('public')->put($path, file_get_contents($document));
-                $upload = new Upload();
-                $upload->name = $name;
-                $upload->path = $path;
-                $candidate->uploads()->save($upload);
+
+                if($document['file'] != 'null' && $document['name'] != 'null'){
+                    $file = $document['file'];
+                    $name = $document['name'];
+                    $fileName = uniqid().'_'.$file->getClientOriginalName();
+                    $path = "uploads/candidates/".$folder."/".$fileName;
+                    Storage::disk('public')->put($path, file_get_contents($file));
+                    $upload = new Upload();
+                    $upload->name = $name;
+                    $upload->file = $fileName;
+                    $upload->path = $path;
+                    $candidate->uploads()->save($upload);
+                }
             }
         }
 
@@ -149,10 +199,24 @@ class CandidateController extends Controller
         ]);
     }
 
+    public function deleteCandidate($id){
+        $candidate = Candidate::findOrFail($id);
+        $candidate->industries()->sync([]);
+        $candidate->uploads()->delete();
+        $candidate->employers()->sync([]);
+        $candidate->shortlistedBy()->sync([]);
+        $candidate->delete();
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Candidate has been deleted',
+        ]);
+    }
+
     public function updateCandidate(Request $request,$id){
 
         $messages = array(
             'contact.integer' => 'The contact field must be a valid number',
+            'department_id.required' => 'The department field is required',
         );
         $request->validate([
             'title' => 'required',
@@ -166,6 +230,7 @@ class CandidateController extends Controller
             'city' => 'required',
             'postcode' => 'required',
             'industries' => 'required',
+            'department_id' => 'required',
         ], $messages);
         $data = $request->except('industries','documents');
         $candidate = Candidate::findOrFail($id);
@@ -175,16 +240,30 @@ class CandidateController extends Controller
 
 
         if(gettype($request->documents) == "array"){
+            $names = $candidate->uploads->pluck('name')->all();
+            $documents = $request->documents;
 
-            $documents = $request->file('documents');
             foreach ($documents as $document){
-                $name = uniqid().'_'.$document->getClientOriginalName();
-                $path = "uploads/candidates/".$folder."/".$name;
-                Storage::disk('public')->put($path, file_get_contents($document));
-                $upload = new Upload();
-                $upload->name = $name;
-                $upload->path = $path;
-                $candidate->uploads()->save($upload);
+                if(isset($document['file']) && $document['file'] != "null" && isset($document['name'])){
+
+                    $file = $document['file'];
+                    $name = $document['name'];
+                    $fileName = uniqid().'_'.$file->getClientOriginalName();
+                    $path = "uploads/candidates/".$folder."/".$fileName;
+                    Storage::disk('public')->put($path, file_get_contents($file));
+                    if(in_array($name,$names)){
+                        $upload = Upload::where('name',$name)->first();
+                        $upload->file = $fileName;
+                        $upload->path = $path;
+                        $upload->save();
+                    }else{
+                        $upload = new Upload();
+                        $upload->name = $name;
+                        $upload->file = $fileName;
+                        $upload->path = $path;
+                        $candidate->uploads()->save($upload);
+                    }
+                }
             }
         }
 
@@ -198,22 +277,69 @@ class CandidateController extends Controller
         ]);
     }
 
-    public function getCandidate($id){
+    public function addComment(Request $request, $id){
 
-        $candidate = Candidate::with(['uploads','industries','shortlistedBy'])->findOrFail($id);
+        $messages = array(
+            'body.required' => 'comment is required.'
+        );
+        $request->validate([
+            'body' => 'required',
+        ], $messages);
+
+        $user = auth()->user();
+        $candidate = Candidate::findOrFail($id);
+        $comment = new Comment();
+        $comment->user_id = $user->id;
+        $comment->body = $request->body;
+        $candidate->comments()->save($comment);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Comment has been added'
+        ]);
+
+    }
+
+    public function getCandidate($id){
+        $user = auth()->user();
+        $isEmployer = $user->hasRole('employer');
+        $candidate = Candidate::with(['uploads' => function($q)use($isEmployer){
+            if($isEmployer){
+                return $q->where('name', 'Safe CV');
+            }
+            return $q;
+        },'industries'])->findOrFail($id);
+        if(!$isEmployer){
+            $candidate->load('comments');
+        }else{
+            $candidate->load(['shortlistedBy' => function ($q)use($user){
+               $q->where('user_id',$user->id);
+            }]);
+        }
         return response()->json($candidate);
     }
 
     public function shortlistCandidate(Request $request, $id){
 
         $candidate = Candidate::findOrFail($id);
-        $user = auth()->user()->profile;
+        $user = auth()->user();
         if($request->attach){
-            $candidate->shortlistedBy()->attach($user->id);
+            $request->validate([
+                'contact_via' => 'required',
+            ]);
+
+            $shortlisted = new ShortlistedCandidate();
+            $shortlisted->user_id = $user->id;
+            $shortlisted->candidate_id = $candidate->id;
+            $shortlisted->contact_via = $request->contact_via;
+            $shortlisted->employer_notes = $request->employer_notes;
+            $shortlisted->save();
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'Candidate has been shortlisted'
             ]);
+
         }else{
             $candidate->shortlistedBy()->detach($user->id);
             return response()->json([

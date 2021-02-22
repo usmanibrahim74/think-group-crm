@@ -5,11 +5,129 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Permission;
 use App\Models\Role;
+use App\Models\User;
 use Dotenv\Validator;
 use Illuminate\Http\Request;
 
 class ManagementController extends Controller
 {
+
+
+    public function getUsers(Request $request){
+
+        $user = auth()->user();
+        $perPage = $request->perPage?(int)$request->perPage:10;
+
+        $page = $request->page?(int)$request->page:1;
+        $search = $request->search?$request->search:"";
+        $toSearch = "%".$search."%";
+        $query = User::where(function ($q)use($toSearch){
+            return $q->where('name', 'LIKE' ,$toSearch)
+                ->orWhere('email', 'LIKE' , $toSearch);
+        })
+            ->where('id','!=',$user->id)
+            ->whereHas('roles',function ($q){
+            return $q->where('name','!=','employer');
+        });
+        $totalCount = $query->count();
+        $data = $query->take($perPage)->skip(($page-1)*$perPage)->get()  ;
+
+        $toReturn = generatePagination($page,$perPage,$totalCount, $data);
+        return response()->json($toReturn);
+    }
+
+    public function getUser($user_id){
+
+        $user = User::with(['roles'])->findOrFail($user_id);
+        return response()->json($user);
+    }
+
+    /**
+     * add new user
+     * */
+    public function addUser(Request $request){
+
+        $messages = array(
+            'role_id.required' => "The role field is required"
+        );
+        $request->validate([
+            'name' => 'required|max:255',
+            'email' => 'required|email:filter|max:255|unique:users',
+            'password' => 'required|min:6|confirmed',
+            'role_id' => 'required'
+        ],$messages);
+
+        $data = $request->only('name','email','password');
+
+        $role = Role::findOrFail($request->role_id);
+        $user = User::create([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => bcrypt($data['password']),
+        ]);
+
+        $user->save();
+        $user->attachRole($role);
+
+
+        return response()->json([
+            "status" => "success",
+            "message" => "User has been added",
+        ]);
+    }
+
+    /**
+     * add new user
+     * */
+    public function updateUser(Request $request,$id){
+
+
+        $messages = array(
+            'role_id.required' => "The role field is required"
+        );
+        $request->validate([
+            'name' => 'required|max:255',
+            'email' => 'required|email:filter|max:255|unique:users,email,'.$id,
+            'role_id' => 'required'
+        ],$messages);
+
+        $user = User::findOrFail($id);
+        $role = Role::findOrFail($request->role_id);
+
+
+        $user->name = $request->name;
+        $user->email = $request->email;
+
+        $user->save();
+        $user->syncRoles([$role]);
+
+
+        return response()->json([
+            "status" => "success",
+            "message" => "User has been updated",
+        ]);
+    }
+
+    public function changeUserPassword(Request $request, $id){
+
+        $request->validate([
+            'password' => 'required|min:6|confirmed',
+        ]);
+
+        $user = User::findOrFail($id);
+
+
+        $user->password = bcrypt($request->password);
+
+        $user->save();
+
+        return response()->json([
+            "status" => "success",
+            "message" => "User's password has been updated",
+        ]);
+    }
+
+
 
     /**
      * return a list of all roles
@@ -20,6 +138,7 @@ class ManagementController extends Controller
         return response()->json($roles);
 
     }
+
 
     public function getRoles(Request $request){
 
@@ -38,6 +157,7 @@ class ManagementController extends Controller
         return response()->json($toReturn);
 
     }
+
 
 
 

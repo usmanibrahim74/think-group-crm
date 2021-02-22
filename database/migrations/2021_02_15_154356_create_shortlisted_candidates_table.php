@@ -14,8 +14,13 @@ class CreateShortlistedCandidatesTable extends Migration
     public function up()
     {
         Schema::create('shortlisted_candidates', function (Blueprint $table) {
-            $table->foreignId('employer_id')->constrained()->onDelete('cascade');
+            $table->id('id');
             $table->foreignId('candidate_id')->constrained()->onDelete('cascade');
+            $table->integer('job_id')->nullable();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->string('contact_via');
+            $table->string('employer_notes')->nullable();
+            $table->timestamps();
         });
     }
 

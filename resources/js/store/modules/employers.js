@@ -18,6 +18,12 @@ export const state = {
   },
   account:null,
   all_profiles:[],
+  shortlisted: {
+    page:1,
+    perPage:5,
+    count:0,
+    data:[]
+  },
 }
 
 // getters
@@ -29,6 +35,9 @@ export const getters = {
 
 // mutations
 export const mutations = {
+  [types.FETCH_SHORTLISTED_SUCCESS] (state, { candidates }) {
+    state.shortlisted = candidates
+  },
   [types.FETCH_ALL_PROFILES_SUCCESS] (state, { profiles }) {
     state.all_profiles = profiles
   },
@@ -50,6 +59,22 @@ export const mutations = {
 export const actions = {
 
 
+  async fetchShortlisted ({ commit, state }, payload) {
+    try {
+      let
+        page = state.shortlisted.page,
+        perPage = state.shortlisted.perPage,
+        search = payload.id,
+        id = payload.id;
+      const url = '/api/employers/profiles/'+id+'/shortlisted?'+'search='+search+'&perPage='+perPage+'&page='+page
+      const { data } = await axios.get(url)
+
+      commit(types.FETCH_SHORTLISTED_SUCCESS, { candidates : data });
+    } catch (e) {
+      alert('some error occurred');
+      console.log(e)
+    }
+  },
   async fetchProfiles ({ commit, state }, payload) {
     try {
       let

@@ -42,6 +42,11 @@
                   :fields="tableFields"
                 >
                   <template #cell(actions)="data" class="text-center">
+                    <router-link title="View" v-if="$can('view-employer-profile')"
+                                 :to="{ name: 'employers.profiles.view', params: { id : data.item.id }}"
+                                 class="text-muted">
+                      <i class="fa fa-eye"></i>
+                    </router-link>
                     <router-link title="Edit" v-if="$can('update-employer-profile')" :to="{ name: 'employers.profiles.edit', params: { id : data.item.id }}" class="text-muted">
                       <i class="fa fa-edit"></i>
                     </router-link>
