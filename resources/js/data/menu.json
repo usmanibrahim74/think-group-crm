@@ -10,7 +10,7 @@
     },
     {
       "title": "Employers",
-      "icon": "airplay",
+      "icon": "users",
       "type": "sub",
       "active": false,
       "gate": "access-employer",
@@ -43,7 +43,7 @@
     },
     {
       "title": "Candidates",
-      "icon": "airplay",
+      "icon": "users",
       "type": "sub",
       "active": false,
       "gate": "access-candidate",
@@ -77,14 +77,14 @@
     {
       "path": "/industries",
       "title": "Industries",
-      "icon": "calendar",
+      "icon": "grid",
       "type": "link",
       "gate": "access-industry",
       "bookmark": true
     },
     {
       "title": "Roles",
-      "icon": "airplay",
+      "icon": "list",
       "type": "sub",
       "active": false,
       "gate": "access-role",
@@ -105,7 +105,7 @@
     },
     {
       "title": "Permissions",
-      "icon": "airplay",
+      "icon": "list",
       "type": "sub",
       "active": false,
       "gate": "access-permission",
@@ -126,7 +126,7 @@
     },
     {
       "title": "Users",
-      "icon": "airplay",
+      "icon": "users",
       "type": "sub",
       "active": false,
       "gate": "access-user",
