@@ -2,7 +2,7 @@
   "data": [
     {
       "path": "/",
-      "title": "Industries",
+      "title": "Dashboard",
       "icon": "home",
       "type": "link",
       "gate": "access-dashboard",
