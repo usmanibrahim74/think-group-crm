@@ -260,15 +260,18 @@ class CandidateController extends Controller
                     Storage::disk('public')->put($path, file_get_contents($file));
                     if(in_array($name,$names)){
                         $upload = Upload::where('name',$name)->first();
-
+                        $upload->file = $fileName;
+                        $upload->path = $path;
+                        $upload->expires_on = $document['expires_on'];
+                        $upload->save();
                     }else{
                         $upload = new Upload();
                         $upload->name = $name;
+                        $upload->file = $fileName;
+                        $upload->path = $path;
+                        $upload->expires_on = $document['expires_on'];
+                        $candidate->uploads()->save($upload);
                     }
-                    $upload->file = $fileName;
-                    $upload->path = $path;
-                    $upload->expires_on = $document['expires_on'];
-                    $upload->save();
                 }
             }
         }
