@@ -49,6 +49,10 @@ class Candidate extends Model
         return $this->belongsToMany(User::class,'shortlisted_candidates');
     }
 
+    public function shortlist(){
+        return $this->hasMany(ShortlistedCandidate::class);
+    }
+
     public function getNameAttribute(){
         return $this->title.' '.$this->first_name.' '.$this->last_name;
     }

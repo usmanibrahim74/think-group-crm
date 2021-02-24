@@ -42,6 +42,9 @@
                   <b-list-group tag="ul">
                     <b-list-group-item v-for="(upload,i) in candidate.uploads" :key="i" tag="li" class="d-flex justify-content-between align-items-center">
                       <span>{{ upload.name }}</span>
+                      <span class="badge"
+                            :class="'badge-'+upload.expire_status"
+                      >Expire{{ upload.expire_status=="danger"?"d":"s" }} on {{ upload.expires_on }}</span>
                       <div>
                         <a :href="'/storage/'+upload.path" title="Downlod" download=""  class="text-muted">
                           <i class="fa fa-download"></i>
@@ -89,6 +92,7 @@
                   </div>
                 </div>
               </div>
+
             </div>
           </div>
         </div>
@@ -192,7 +196,7 @@
       </div>
     </b-modal>
 
-    <b-modal hide-footer v-if="$can('view-employer-notes-for-shortlisted-candidate') || true" id="modal-employer-candidate-notes" centered @ok="shortlistCandidate" @hidden="isShortlisted = false"
+    <b-modal hide-footer v-if="$can('view-employer-notes-for-shortlisted-candidate') || true" id="modal-employer-candidate-notes" centered
              title="Employer Notes" ok-title="Shortlist" ok-variant="primary" class="theme-modal">
       <div class="row">
         <div class="col-12">
@@ -201,7 +205,7 @@
             <div class="social-chat mt-0">
               <div class="your-msg m-0">
                 <div class="media">
-                  <div class="media-body">
+                  <div class="media-body mb-1">
                     <span class="f-w-600">{{ shortlistedByEmployer.name }}
                       <span>
                         {{ shortlistedByEmployer.shortlist[0].shortlisted_ago }}
@@ -213,20 +217,33 @@
                   </div>
                 </div>
               </div>
+              <div class="your-msg m-0" v-for="(comment, i) in shortlistedByEmployer.shortlist[0].comments" :key="i">
+                <div class="media">
+                  <div class="media-body mb-1">
+                    <span class="f-w-600">{{ comment.commented_by }}
+                      <span>
+                        {{ comment.commented_ago }}
+                        <i class="fa fa-reply font-primary"></i>
+                      </span>
+                    </span>
+                    <p class="m-0">{{ comment.body }}</p>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="comments-box" v-if="$can('add-comment')">
+            <div class="comments-box" v-if="$can('respond-employer')">
               <div class="media">
                 <!--                    <img class="img-50 img-fluid m-r-20 rounded-circle" alt="" src="../../assets/images/user/1.jpg">-->
-                <form @submit.prevent="addComment" class="media-body">
+                <form @submit.prevent="addShortlistedComment" class="media-body">
                   <div class="input-group text-box">
                     <input class="form-control input-txt-bx"
-                           type="text" name="message-to-send" :class="{ 'is-invalid': comment.errors.has('body') }"
-                           placeholder="Inform Employer" v-model="comment.body">
+                           type="text" name="message-to-send" :class="{ 'is-invalid': shortlistedComment.errors.has('body') }"
+                           placeholder="Respond" v-model="shortlistedComment.body">
                     <!--                        <div class="input-group-append">-->
                     <!--                          <button class="btn btn-transparent" type="button"><i class="fa fa-smile-o">  </i></button>-->
                     <!--                        </div>-->
 
-                    <has-error :form="comment" field="body"/>
+                    <has-error :form="shortlistedComment" field="body"/>
                   </div>
                 </form>
               </div>
@@ -262,6 +279,9 @@
         comment: new Form({
           body: ""
         }),
+        shortlistedComment: new Form({
+          body: ""
+        }),
         filter: "",
         pageOptions: [5, 10, 15],
         delete_id:0,
@@ -286,9 +306,9 @@
 
     },
     mounted() {
-      setTimeout(() => {
+      // setTimeout(() => {
         this.fetchData();
-      },1000)
+      // },1000)
     },
     computed:{
       ...mapState({
@@ -355,11 +375,24 @@
         }
       },
 
+      async addShortlistedComment(){
+        try {
+          const { data } = await this.shortlistedComment.post('/api/candidates/shortlist/'+this.shortlistedByEmployer.shortlist[0].id+'/comments');
+          this.$alert(data.message, data.status);
+          this.shortlistedComment.reset();
+          this.fetchData();
+
+        }catch (e) {
+          console.log(e);
+          this.$error('some error occurred');
+        }
+      },
+
       fetchData(){
-        if(this.$can('view-shortlisted-by')){
+        // if(this.$can('view-shortlisted-by')){
           const id = this.$route.params.id;
           this.$store.dispatch('candidates/fetchShortlistedBy', {search: this.filter,id:id});
-        }
+        // }
       }
 
     },
@@ -386,7 +419,15 @@
         handler(){
           this.filterData()
         }
-      }
+      },
+      'shortlistedBy':{
+        deep:true,
+        handler(){
+          if(this.shortlistedByEmployer){
+            this.shortlistedByEmployer = this.shortlistedBy.data.find( s => s.id == this.shortlistedByEmployer.id);
+          }
+        }
+      },
     }
   }
 </script>

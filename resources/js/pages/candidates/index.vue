@@ -8,9 +8,13 @@
           <div class="card">
             <div class="card-header d-flex justify-content-between">
               <div class="card-title">
-                <h5>{{ department }} Candidates</h5><span>List of all Candidates from {{ department.toLowerCase() }} department</span>
+                <h5>Candidates</h5><span>List of all Candidates</span>
               </div>
-              <div class="card-buttons">
+              <div class="card-buttons" style="flex-basis: 30%;" v-if="$can('filter-by-department')">
+                <div class="form-group d-flex align-items-center">
+                  <label class="d-block mr-2 mb-0" style="white-space: nowrap;">Filter By Department:</label>
+                  <b-form-select @input="fetchData" v-model="department" :options="departments"></b-form-select>
+                </div>
 
               </div>
             </div>
@@ -121,7 +125,8 @@
         radius:5,
         radiusOptions: [5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
 
-        department:"",
+        department:"All",
+        departments:['All','Healthcare','Education'],
       }
 
     },
@@ -153,11 +158,11 @@
 
       },
       fetchData(){
-        let department = this.$route.query.department;
-        if(!department || department == ''){
-          department = "healthcare";
+        let department = this.department;
+        if(department == "All"){
+          department = "";
         }
-        this.department = department.charAt(0).toUpperCase() + department.slice(1);
+        department = department.toLowerCase();
         this.$store.dispatch('candidates/fetchCandidates', {search: this.filter, department});
       }
     },

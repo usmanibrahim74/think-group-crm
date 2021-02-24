@@ -11,7 +11,25 @@ class Upload extends Model
 
     protected $hidden = ['uploadable_id','uploadable_type'];
 
+    protected $appends = ['expire_status'];
+
     public function uploadable(){
         return $this->morphTo();
+    }
+
+
+    public function getExpireStatusAttribute(){
+        $today = time();
+        $twoDaysBefore = strtotime('-2 days', time());
+        $expireOn = strtotime($this->expires_on);
+        if($expireOn > $today){
+            if ($expireOn > $twoDaysBefore){
+                return "success";
+            }else{
+                return "warning";
+            }
+        }else{
+            return "danger";
+        }
     }
 }

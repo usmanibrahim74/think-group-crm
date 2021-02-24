@@ -40,7 +40,6 @@
                   stacked="md"
                   :items="roles.data"
                   :fields="rolesTableFields"
-                  @filtered="onFiltered"
                 >
                   <template #cell(actions)="data" class="text-center">
                     <router-link title="Edit" v-if="$can('update-role')" :to="{ name: 'roles.edit', params: { id : data.item.id }}" class="text-muted">
@@ -116,11 +115,6 @@
       }),
     },
     methods:{
-      onFiltered(filteredItems) {
-        // Trigger pagination to update the number of buttons/pages due to filtering
-        this.totalRows = filteredItems.length
-        this.currentPage = 1
-      },
       async remove(){
         try{
           const { data } = await axios.delete('/api/roles/'+this.delete_id);

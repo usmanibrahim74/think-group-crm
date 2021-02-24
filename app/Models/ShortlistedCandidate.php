@@ -14,4 +14,8 @@ class ShortlistedCandidate extends Model
     public function getShortlistedAgoAttribute(){
         return $this->created_at->diffForHumans();
     }
+
+    public function comments(){
+        return $this->morphMany(Comment::class, 'commentable')->whereNull('parent_id');
+    }
 }

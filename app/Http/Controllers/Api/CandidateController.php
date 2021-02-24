@@ -94,6 +94,9 @@ class CandidateController extends Controller
                 $query = $query->whereHas('shortlistedBy',function ($q)use($employer_id){
                     return $q->where('user_id',$employer_id);
                 });
+                $query = $query->with(['shortlist'=>function($q)use($employer_id){
+                    return $q->with('comments')->where('user_id',$employer_id);
+                }]);
             }
             $totalCount = $query->count();
 
@@ -122,7 +125,7 @@ class CandidateController extends Controller
 
 
         $query = User::with(['shortlist'=>function($q)use($id){
-            return $q->where('candidate_id',$id);
+            return $q->with('comments')->where('candidate_id',$id);
         }])->where(function ($q)use($toSearch){
             return $q->where('name', 'LIKE' ,$toSearch)
                 ->orWhere('email', 'LIKE' ,$toSearch);
@@ -155,14 +158,14 @@ class CandidateController extends Controller
             'first_name' => 'required',
             'last_name' => 'required',
             'date_of_birth' => 'required|date',
-            'email' => 'required|email|unique:candidates,email',
+//            'email' => 'required|email|unique:candidates,email',
             'contact' => 'required|integer',
             'address_1' => 'required',
-            'address_2' => 'required',
+//            'address_2' => 'required',
             'city' => 'required',
             'postcode' => 'required',
             'department_id' => 'required',
-            'industries' => 'required',
+//            'industries' => 'required',
         ], $messages);
 
         $data = $request->except('industries','documents');
@@ -185,13 +188,17 @@ class CandidateController extends Controller
                     $upload->name = $name;
                     $upload->file = $fileName;
                     $upload->path = $path;
+                    $upload->expires_on = $document['expires_on'];
                     $candidate->uploads()->save($upload);
                 }
             }
         }
 
-        $industries = array_column($request->industries,'id');
-        $candidate->industries()->sync($industries);
+        if($request->industries){
+            $industries = array_column($request->industries,'id');
+            $candidate->industries()->sync($industries);
+        }
+
 
         return response()->json([
             'status' => 'success',
@@ -226,10 +233,10 @@ class CandidateController extends Controller
             'email' => 'required|email|unique:candidates,email,'.$id,
             'contact' => 'required|integer',
             'address_1' => 'required',
-            'address_2' => 'required',
+//            'address_2' => 'required',
             'city' => 'required',
             'postcode' => 'required',
-            'industries' => 'required',
+//            'industries' => 'required',
             'department_id' => 'required',
         ], $messages);
         $data = $request->except('industries','documents');
@@ -253,22 +260,23 @@ class CandidateController extends Controller
                     Storage::disk('public')->put($path, file_get_contents($file));
                     if(in_array($name,$names)){
                         $upload = Upload::where('name',$name)->first();
-                        $upload->file = $fileName;
-                        $upload->path = $path;
-                        $upload->save();
+
                     }else{
                         $upload = new Upload();
                         $upload->name = $name;
-                        $upload->file = $fileName;
-                        $upload->path = $path;
-                        $candidate->uploads()->save($upload);
                     }
+                    $upload->file = $fileName;
+                    $upload->path = $path;
+                    $upload->expires_on = $document['expires_on'];
+                    $upload->save();
                 }
             }
         }
 
-
-        $industries = array_column($request->industries,'id');
+        $industries = [];
+        if($request->industries){
+            $industries = array_column($request->industries,'id');
+        }
         $candidate->industries()->sync($industries);
 
         return response()->json([
@@ -292,6 +300,29 @@ class CandidateController extends Controller
         $comment->user_id = $user->id;
         $comment->body = $request->body;
         $candidate->comments()->save($comment);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Comment has been added'
+        ]);
+
+    }
+
+    public function addShortlistComment(Request $request, $id){
+
+        $messages = array(
+            'body.required' => 'comment is required.'
+        );
+        $request->validate([
+            'body' => 'required',
+        ], $messages);
+
+        $user = auth()->user();
+        $shortlist = ShortlistedCandidate::findOrFail($id);
+        $comment = new Comment();
+        $comment->user_id = $user->id;
+        $comment->body = $request->body;
+        $shortlist->comments()->save($comment);
 
         return response()->json([
             'status' => 'success',

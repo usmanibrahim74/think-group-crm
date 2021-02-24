@@ -71,6 +71,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('candidates', [CandidateController::class, 'getCandidates']);
     Route::get('candidates/shortlisted', [CandidateController::class, 'getShortlistedCandidates']);
     Route::post('candidates/{id}/comments', [CandidateController::class, 'addComment']);
+    Route::post('candidates/shortlist/{id}/comments', [CandidateController::class, 'addShortlistComment']);
     Route::get('candidates/{id}/shortlistedby', [CandidateController::class, 'getShortlistedBy']);
     Route::put('candidates/{id}/shortlist', [CandidateController::class, 'shortlistCandidate']);
     Route::post('candidates', [CandidateController::class, 'addCandidate']);

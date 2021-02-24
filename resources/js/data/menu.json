@@ -61,14 +61,8 @@
           "gate": "view-shortlisted-candidate"
         },
         {
-          "path": "/candidates?department=healthcare",
-          "title": "View Healthcare Candidates",
-          "type": "link",
-          "gate": "view-candidate"
-        },
-        {
-          "path": "/candidates?department=education",
-          "title": "View Education Candidates",
+          "path": "/candidates",
+          "title": "View Candidates",
           "type": "link",
           "gate": "view-candidate"
         }

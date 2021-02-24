@@ -157,13 +157,19 @@
                     </div>
                     <div class="form-group row" v-for="(document,i) in form.documents" :key="i">
                       <label class="col-form-label col-sm-3">{{ document.name }}</label>
-                      <div class="col-sm-9">
+                      <div class="col-sm-6">
                         <b-form-file :class="{ 'is-invalid': form.errors.has('documents') }"
                                      v-model="document.file"
                                      :state="Boolean(form.documents)"
                                      placeholder="Choose file"
                                      drop-placeholder="Drop file here..."
                         ></b-form-file>
+                        <has-error :form="form" field="documents"/>
+                      </div>
+                      <div class="col-sm-3">
+                        <input v-model="document.expires_on" class="form-control"
+                               :class="{ 'is-invalid': form.errors.has('documents') }"
+                               type="date">
                         <has-error :form="form" field="documents"/>
                       </div>
                     </div>
@@ -212,20 +218,21 @@
           department_id:"",
           industries:[],
           documents:[
-            {name:'CV', file:null},
-            {name:'Safe CV', file:null},
-            {name:'UK Passport/Work Permit', file:null},
-            {name:'Passport Photo', file:null},
-            {name:'Proof of Address 1', file:null},
-            {name:'Proof of Address 2', file:null},
-            {name:'Reference 1', file:null},
-            {name:'Reference 2', file:null},
-            {name:'National Insurance', file:null},
-            {name:'DBS Certificate', file:null},
-            {name:'Training Certificate 1', file:null},
-            {name:'Training Certificate 2', file:null},
-            {name:'Training Certificate 3', file:null},
-            {name:'Healthcare NMC', file:null},
+            {name:'CV', file:null, expires_on:null},
+            {name:'Safe CV', file:null, expires_on:null},
+            {name:'DBS Update Service', file:null, expires_on:null},
+            {name:'UK Passport/Work Permit', file:null, expires_on:null},
+            {name:'Passport Photo', file:null, expires_on:null},
+            {name:'Proof of Address 1', file:null, expires_on:null},
+            {name:'Proof of Address 2', file:null, expires_on:null},
+            {name:'Reference 1', file:null, expires_on:null},
+            {name:'Reference 2', file:null, expires_on:null},
+            {name:'National Insurance', file:null, expires_on:null},
+            {name:'DBS Certificate', file:null, expires_on:null},
+            {name:'Training Certificate 1', file:null, expires_on:null},
+            {name:'Training Certificate 2', file:null, expires_on:null},
+            {name:'Training Certificate 3', file:null, expires_on:null},
+            {name:'Healthcare NMC', file:null, expires_on:null},
           ]
         }),
         titles:[

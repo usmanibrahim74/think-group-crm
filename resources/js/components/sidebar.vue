@@ -3,8 +3,7 @@
     <div class="main-header-left d-none d-lg-block">
       <div class="logo-wrapper">
         <router-link to="/">
-          <img v-if="user && user.profile" class="w-100" :src="'/storage/'+user.profile.logo" alt />
-          <img v-else src="../assets/images/logo.png" alt />
+          <img src="../assets/images/logo.png" alt />
         </router-link>
       </div>
     </div>
@@ -233,7 +232,6 @@ export default {
       menuItems: state => state.menu.data,
       layout: state => state.layout.layout,
       sidebar: state => state.layout.sidebarType,
-      user: state => state.auth.user
     })
   },
   created() {
