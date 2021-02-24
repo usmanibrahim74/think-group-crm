@@ -15,19 +15,19 @@ class CreateCandidatesTable extends Migration
     {
         Schema::create('candidates', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->string('first_name');
-            $table->string('last_name');
-            $table->date('date_of_birth');
+            $table->string('title')->nullable();
+            $table->string('first_name')->nullable();
+            $table->string('last_name')->nullable();
+            $table->date('date_of_birth')->nullable();
             $table->string('email')->unique();
-            $table->string('contact');
-            $table->text('address_1');
-            $table->text('address_2');
-            $table->string('city');
-            $table->string('postcode');
-            $table->string('current_salary');
-            $table->string('desired_salary');
-            $table->text('notes');
+            $table->string('contact')->nullable();
+            $table->text('address_1')->nullable();
+            $table->text('address_2')->nullable();
+            $table->string('city')->nullable();
+            $table->string('postcode')->nullable();
+            $table->string('current_salary')->nullable();
+            $table->string('desired_salary')->nullable();
+            $table->text('notes')->nullable();
             $table->timestamps();
         });
     }
