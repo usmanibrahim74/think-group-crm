@@ -1,8 +1,8 @@
 <template>
   <div class="container-fluid">
     <div class="page-header">
-      <div class="row">
-        <div class="col-lg-12">
+      <div class="row ">
+        <div class="col-lg-11">
           <div class="page-header-left">
             <h3>{{title}}</h3>
             <ol class="breadcrumb">
@@ -12,12 +12,16 @@
             </ol>
           </div>
         </div>
+        <div class="col-lg-1">
+          <img class="w-100" v-if="user && user.profile" :src="'/storage/'+user.profile.logo" alt />
+        </div>
       </div>
     </div>
   </div>
 </template>
 <script>
 import Bookmark from  './bookmark'
+import { mapState } from "vuex"
 export default {
   props: {
     title: {
@@ -26,6 +30,11 @@ export default {
     main: {
       default: ''
     }
+  },
+  computed:{
+    ...mapState({
+      user: state => state.auth.user
+    })
   },
   components:{
     Bookmark

@@ -3,11 +3,7 @@
     <Breadcrumbs title="Dashboard"/>
     <!-- Container-fluid starts-->
     <div class="container-fluid">
-      <div class="row" v-if="user && user.profile">
-        <div class="col-4 offset-4">
-          <img class="w-100" :src="'/storage/'+user.profile.logo" alt />
-        </div>
-      </div>
+
       <div class="row">
         <div class="col-sm-6 col-xl-6 col-lg-6" v-for="(widget,i) in widgets">
           <div class="card o-hidden">
