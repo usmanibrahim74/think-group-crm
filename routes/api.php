@@ -12,19 +12,24 @@ use App\Http\Controllers\Settings\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ManagementController;
 use App\Http\Controllers\Api\CandidateController;
-use App\Http\Controllers\Api\EmployerController;
+use App\Http\Controllers\Api\ClientController;
 use App\Http\Controllers\Api\DashboardController;
-
+use App\Http\Controllers\Api\DepartmentController;
+use Illuminate\Support\Facades\Log;
 /*
 |--------------------------------------------------------------------------
 | API Routes
 |--------------------------------------------------------------------------
 |
-| Here is where you can register API routes for your application. These
+| Here is wapihere you can register API routes for your application. These
 | routes are loaded by the RouteServiceProvider within a group which
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+Route::get('/webhook',function (){
+    Log::info('hanji');
+});
 
 Route::group(['middleware' => 'auth:api'], function () {
     Route::post('logout', [LoginController::class, 'logout']);
@@ -61,6 +66,8 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::put('permissions/{permission_id}', [ManagementController::class, 'updatePermission']);
     Route::delete('permissions/{permission_id}', [ManagementController::class, 'deletePermission']);
 
+    Route::get('departments', [DepartmentController::class, 'getDepartments']);
+//    Route::get('responsibilities', [DepartmentController::class, 'getResponsibilities']);
 
     Route::get('industries', [CandidateController::class, 'getIndustries']);
     Route::get('industries/all', [CandidateController::class, 'getAllIndustries']);
@@ -81,24 +88,24 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::delete('uploads/{upload_id}', [CandidateController::class, 'deleteUpload']);
 
-    Route::get('employers/profiles', [EmployerController::class, 'getProfiles']);
-    Route::get('employers/profiles/all', [EmployerController::class, 'getAllProfiles']);
-    Route::post('employers/profiles', [EmployerController::class, 'addProfile']);
-    Route::get('employers/profiles/{id}/shortlisted', [EmployerController::class, 'getShortlisted']);
-    Route::get('employers/profiles/{id}', [EmployerController::class, 'getProfile']);
-    Route::put('employers/profiles/{id}', [EmployerController::class, 'updateProfile']);
-    Route::delete('employers/profiles/{id}', [EmployerController::class, 'deleteProfile']);
+    Route::get('clients/profiles', [ClientController::class, 'getProfiles']);
+    Route::get('clients/profiles/all', [ClientController::class, 'getAllProfiles']);
+    Route::post('clients/profiles', [ClientController::class, 'addProfile']);
+    Route::get('clients/profiles/{id}/shortlisted', [ClientController::class, 'getShortlisted']);
+    Route::get('clients/profiles/{id}', [ClientController::class, 'getProfile']);
+    Route::put('clients/profiles/{id}', [ClientController::class, 'updateProfile']);
+    Route::delete('clients/profiles/{id}', [ClientController::class, 'deleteProfile']);
 
-    Route::put('employers/profiles/{id}/candidates', [EmployerController::class, 'syncCandidates']);
+    Route::put('clients/profiles/{id}/candidates', [ClientController::class, 'syncCandidates']);
 
 
 
-    Route::get('employers/accounts', [EmployerController::class, 'getAccounts']);
-    Route::post('employers/accounts', [EmployerController::class, 'addAccount']);
-    Route::delete('employers/accounts/{id}', [EmployerController::class, 'deleteAccount']);
-    Route::get('employers/accounts/{id}', [EmployerController::class, 'getAccount']);
-    Route::put('employers/accounts/{id}', [EmployerController::class, 'updateAccount']);
-    Route::put('employers/accounts/{id}/change-password', [EmployerController::class, 'changeAccountPassword']);
+    Route::get('clients/accounts', [ClientController::class, 'getAccounts']);
+    Route::post('clients/accounts', [ClientController::class, 'addAccount']);
+    Route::delete('clients/accounts/{id}', [ClientController::class, 'deleteAccount']);
+    Route::get('clients/accounts/{id}', [ClientController::class, 'getAccount']);
+    Route::put('clients/accounts/{id}', [ClientController::class, 'updateAccount']);
+    Route::put('clients/accounts/{id}/change-password', [ClientController::class, 'changeAccountPassword']);
 
 });
 
