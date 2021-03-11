@@ -27,7 +27,7 @@ use Illuminate\Support\Facades\Log;
 |
 */
 
-Route::get('/webhook',function (){
+Route::post('/webhook',function (){
     Log::info('hanji');
 });
 
