@@ -27,8 +27,8 @@ use Illuminate\Support\Facades\Log;
 |
 */
 
-Route::post('/webhook',function (){
-    Log::info('hanji');
+Route::post('/webhook',function ( Illuminate\Http\Request $request){
+    Log::info(json_encode($request->all()));
 });
 
 Route::group(['middleware' => 'auth:api'], function () {
